@@ -1,0 +1,76 @@
+{    
+    "files.insertFinalNewline": true,
+
+    // vscode-icons
+    "workbench.iconTheme": "vscode-icons",
+
+    // Code Runner
+    "code-runner.fileDirectoryAsCwd": true,    
+    "code-runner.runInTerminal": true,
+
+    //Python
+    "python.terminal.executeInFileDir": true,
+
+    // Jupyter
+    "notebook.lineNumbers": "on",
+    "jupyter.notebookFileRoot": "${fileDirname}",
+    // Note: "${fileDirName}" doesn't work for containers use "${workspaceFolder}" instead in .devcontainer
+
+    // Latex
+    "latex-workshop.latex.outDir": "%DIR%/build",
+    "workbench.editorAssociations": {
+        "*.pdf": "latex-workshop-pdf-hook"
+    },
+    "latex-workshop.latex.tools": [ // list of tools to be used by recipes
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": ["%DOCFILE%"],
+            "env": {}
+        },
+        {
+            "name": "pdf windows",
+            "command": "copy",
+            "args": ["%OUTDIR_W32%\\%DOCFILE%.pdf", "%DIR_W32%\\"]
+        },
+        {
+            "name": "pdf linux & mac",
+            "command": "cp",
+            "args": ["%OUTDIR%/%DOCFILE%.pdf", "%DIR%/"]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk",
+            "tools": ["latexmk", "pdf windows"] // or "pdf linux & mac" if you are on linux or mac
+        },
+        {
+            "name": "pdflatex -> bibtex -> pdflatex * 2",
+            "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex", "pdf windows"] // or "pdf linux & mac" if you are on linux or mac
+        }
+    ],
+}

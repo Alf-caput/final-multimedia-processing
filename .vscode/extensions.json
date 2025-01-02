@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-toolsai.jupyter",
+    "james-yu.latex-workshop",
+    "vscode-icons-team.vscode-icons",
+    "formulahendry.code-runner",
+  ]
+}
