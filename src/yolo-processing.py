@@ -33,7 +33,7 @@ class Video:
     
     def __iter__(self):
         return self.frame_gen()
-
+    
 def main():
     data_path = "data"
     video_name = "cars-highway.mp4"
@@ -56,56 +56,57 @@ def main():
 
     obj_positions = {}
     obj_velocities = {}
+    avg_velocities = {}
     detection_lifetime_frames = 5
-   
+
     for i, frame in enumerate(video):
-        results = yolo.track(frame[roi_mask], persist=True, classes=[2, 7], conf=0.6, iou=0.5)
+        results = yolo.track(frame[roi_mask], persist=True, classes=[2, 7], conf=0.45, iou=0.5, verbose=False)
 
         for obj in results[0].boxes:
             try:
                 id = int(obj.id.item())
-                x, *_, y = map(int, obj.xyxy[0].numpy()) # (x, y) is bottom-left corner of the object
+                x, y, *_ = map(int, obj.xywh[0].numpy())
                 obj_pos_frame = (x, y, i)
 
                 if id not in obj_positions.keys():
                     obj_positions[id] = [obj_pos_frame]
-                    obj_velocities[id] = None
+                    obj_velocities[id] = [None]
+                    avg_velocities[id] = None
                 else:
                     obj_positions[id].append(obj_pos_frame)
-                    xpx_diff = obj_positions[id][-1][0] - obj_positions[id][-2][0]
+                    xpx_diff = obj_positions[id][-1][0] - obj_positions[id][-2][0] # Omitted for simplicity
                     ypx_diff = obj_positions[id][-1][1] - obj_positions[id][-2][1]
-                    frame_diff = obj_positions[id][-1][-1] - obj_positions[id][-2][-1]
+                    frame_diff = obj_positions[id][-1][2] - obj_positions[id][-2][2]
 
-                    vx = xpx_diff/frame_diff
-                    vy = ypx_diff/frame_diff
+                    vx = xpx_diff/frame_diff * video.fps # Omitted for simplicity
+                    vy = -ypx_diff/frame_diff * video.fps
 
-                    if id not in obj_velocities.keys() or obj_velocities[id] is None:
-                        obj_velocities[id] = ypx_diff/frame_diff
+                    if obj_velocities[id] == [None]:
+                        obj_velocities[id] = [vy]
+                        avg_velocities[id] = vy
                     else:
-                        obj_velocities[id] = (obj_velocities[id] + vy) / 2 
-
-                    speed = obj_velocities[id] * video.fps
-
-                    cv2.putText(frame[roi_mask], f"{-speed:.2f} px/s", (x, y+7), 0, 0.5, (0, 255, 0), 1)
+                        obj_velocities[id].append(vy)
+                        avg_velocities[id] = np.mean(obj_velocities[id])
+                        cv2.putText(frame[roi_mask], f"{avg_velocities[id]:.2f} px/s", (x, y+7), 0, 0.5, (0, 255, 0), 1)
             
 
                 cv2.circle(frame[roi_mask], (x, y), 3, (0, 0, 255), -1)
 
             except AttributeError:
-                print("No objects detected, resuming...")
+                print("Invalid object, resuming...")
                 continue
 
         cv2.rectangle(frame, (x1_roi, y1_roi), (x2_roi, y2_roi), (0, 0, 255), 2)
 
-        vehicle_count = len(obj_positions)
+        vehicle_count = len(results[0].boxes)
         cv2.putText(frame, f"Vehicle count: {vehicle_count}", (x2_roi+5, y1_roi-5), 0, 0.5, (0, 0, 255), 1)
 
-        if obj_velocities:
-            filtered = [value for value in obj_velocities.values() if value is not None] # Remove None's
+        filtered = [value for value in avg_velocities.values() if value is not None] # Remove None's
+        if filtered:
             avg_speed = np.mean(filtered)
-            cv2.putText(frame, f"Avg speed: {-avg_speed*video.fps:.2f}px/s", (x1_roi-5, y1_roi-5), 0, 0.5, (0, 255, 0), 1)
-
-        cv2.putText(frame, f"Traffic: {-avg_speed*video.fps<15 and vehicle_count>3}", (20, 20), 0, 0.5, (255, 0, 0), 1)
+            bool_traffic = avg_speed < 15 and vehicle_count > 3
+            cv2.putText(frame, f"Traffic: {bool_traffic}", (20, 20), 0, 0.5, (255, 0, 0), 1)
+            cv2.putText(frame, f"Avg speed: {avg_speed:.2f}px/s", (x1_roi-5, y1_roi-5), 0, 0.5, (0, 255, 0), 1)
 
         cv2.imshow("YOLO", frame)
 
@@ -113,11 +114,9 @@ def main():
             if i - obj_positions[id][-1][-1] > detection_lifetime_frames:
                 del obj_positions[id]
                 del obj_velocities[id]
-    
+                del avg_velocities[id]
+
     cv2.destroyAllWindows()
-
-    return
-
 
 if __name__ == "__main__":
     main()
