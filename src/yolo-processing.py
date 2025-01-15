@@ -56,6 +56,7 @@ def main():
 
     obj_positions = {}
     obj_velocities = {}
+    avg_velocities = {}
     detection_lifetime_frames = 5
 
     for i, frame in enumerate(video):
@@ -69,7 +70,8 @@ def main():
 
                 if id not in obj_positions.keys():
                     obj_positions[id] = [obj_pos_frame]
-                    obj_velocities[id] = None
+                    obj_velocities[id] = [None]
+                    avg_velocities[id] = None
                 else:
                     obj_positions[id].append(obj_pos_frame)
                     xpx_diff = obj_positions[id][-1][0] - obj_positions[id][-2][0] # Omitted for simplicity
@@ -79,12 +81,13 @@ def main():
                     vx = xpx_diff/frame_diff * video.fps # Omitted for simplicity
                     vy = -ypx_diff/frame_diff * video.fps
 
-                    if obj_velocities[id] is None:
-                        obj_velocities[id] = vy
+                    if obj_velocities[id] == [None]:
+                        obj_velocities[id] = [vy]
+                        avg_velocities[id] = vy
                     else:
-                        obj_velocities[id] = (obj_velocities[id] + vy) / 2 
-
-                    cv2.putText(frame[roi_mask], f"{obj_velocities[id]:.2f} px/s", (x, y+7), 0, 0.5, (0, 255, 0), 1)
+                        obj_velocities[id].append(vy)
+                        avg_velocities[id] = np.mean(obj_velocities[id])
+                        cv2.putText(frame[roi_mask], f"{avg_velocities[id]:.2f} px/s", (x, y+7), 0, 0.5, (0, 255, 0), 1)
             
 
                 cv2.circle(frame[roi_mask], (x, y), 3, (0, 0, 255), -1)
@@ -98,14 +101,12 @@ def main():
         vehicle_count = len(results[0].boxes)
         cv2.putText(frame, f"Vehicle count: {vehicle_count}", (x2_roi+5, y1_roi-5), 0, 0.5, (0, 0, 255), 1)
 
-        if obj_velocities:
-            filtered = [value for value in obj_velocities.values() if value is not None] # Remove None's
-            if filtered:
-                avg_speed = np.mean(filtered)
-                cv2.putText(frame, f"Avg speed: {avg_speed:.2f}px/s", (x1_roi-5, y1_roi-5), 0, 0.5, (0, 255, 0), 1)
-
-                bool_traffic = avg_speed < 15 and vehicle_count > 3
-                cv2.putText(frame, f"Traffic: {bool_traffic}", (20, 20), 0, 0.5, (255, 0, 0), 1)
+        filtered = [value for value in avg_velocities.values() if value is not None] # Remove None's
+        if filtered:
+            avg_speed = np.mean(filtered)
+            bool_traffic = avg_speed < 15 and vehicle_count > 3
+            cv2.putText(frame, f"Traffic: {bool_traffic}", (20, 20), 0, 0.5, (255, 0, 0), 1)
+            cv2.putText(frame, f"Avg speed: {avg_speed:.2f}px/s", (x1_roi-5, y1_roi-5), 0, 0.5, (0, 255, 0), 1)
 
         cv2.imshow("YOLO", frame)
 
@@ -113,6 +114,7 @@ def main():
             if i - obj_positions[id][-1][-1] > detection_lifetime_frames:
                 del obj_positions[id]
                 del obj_velocities[id]
+                del avg_velocities[id]
 
     cv2.destroyAllWindows()
 
