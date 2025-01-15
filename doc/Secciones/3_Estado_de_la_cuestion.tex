@@ -1,2 +1,57 @@
 \section{Estado de la cuestión}
-% ...
+
+La visión por computadora ha experimentado un crecimiento exponencial en los últimos años en el campo de la detección y el seguimiento de objetos en imágenes y videos. Este desarrollo se ha dado debido a grandes avances en el hardware de procesamiento, la disponibilidad de conjuntos grandes de datos y la evolución de algoritmos de aprendizaje automático, como las redes neuronales convolucionales (CNNs). El modelo YOLO (You Only Look Once) ha surgido como una solución innovadora que ha impactado mucho en el campo de reconocimiento de objetos en tiempo real.
+\noindent
+A continuación se analizará el contexto general de la detección de objetos y el modelo YOLO, así como su relevancia y aplicaciones.
+\subsection{Evolución en la Detección de Objetos}
+
+La detección de objetos es una de las tareas más relevantes de la visión por computador que se basa en la clasificación de objetos y su localización en una imagen o video.  Esto se realiza mediante cuadros delimitadores (bounding boxes). Últimamente se han estudiado varios enfoques para abordar esta tarea, que pueden clasificarse en métodos tradicionales y basados en aprendizaje automático:
+\begin{enumerate}
+    \item Métodos Tradicionales:
+    Existen métodos clásicos para detectar objetos como los modelos basados en descriptores de características (SIFT, HOG) y clasificadores como SVMs.  Estos predominaban hace unos años y requieren de introducir manualmente las especificaciones.  Están limitados en términos de precisión y capacidad de generalización, sobre todo en problemas muy complejos y dinámicos.
+    \item Métodos Basados en Aprendizaje Automático
+    Las CNNs fueron revolucionarias.      
+\end{enumerate}
+
+\subsection{Modelo YOLO: Nacimiento y Evolución}
+
+YOLO fue introducido por Joseph Redmon en 2016 y fue una herramienta revolucionaria en el ámbito de la detección de objetos. Este modelo presenta un enfoque unificado y en un solo paso, lo que le permite procesar imágenes completas en un único paso, a diferencia de los métodos basados en regiones.
+\begin{enumerate}
+    \item Principales Innovaciones YOLO: El procesamiento se hace en una sola etapa, pues YOLO divide la imagen en una cuadrícula y precide a la vez todos los bounding boxes, las clases y la precisión en cada objeto, eliminando la necesidad de pasos intermedios y separados que generen la clasificación.
+    YOLO tiene un diseño muy eficiente, permitiéndolo así actuar con gran velocidad.  Es capad de procesar imágenes muy rápido, a velocidades de hasta 45 FPS, por lo que es ideal para aplicaciones en tiempo real.
+    Además, YOLO destaca por su generalización, ya que trabaja bien con imágenes no vistas anteriormente, por eso es una herramienta muy versátil.
+    \item Versiones de YOLO: Desde que salió, YOLO ha evolucionado bastante.  De la versión 1 a la 3, se centraron en mejorar la precisión y velocidad del modelo ajustando su arquitectura.  
+    De las versión 4 a la 5, se incluyeron técnicas avanzadas como los mecanismos de atención para mejorar el rendimiento en escenarios más complejos.
+    De la versión 7 a la 8, las mas recientes, se ha trabajado más en el equilibrio entre velocidad y precisión, metiendo redes neuronales ligeras y más eficientes.  Se usa una versión personalizada, yolo11n.pt, que está adaptada a escenarios específicos, como la detección de vehículos.     
+\end{enumerate}
+
+\subsection{Aplicaciones de YOLO}
+YOLO es un modelo muy versátil por lo que se puede aplicar a muchas industrias diferentes, entre ellos:
+
+\begin{enumerate}
+    \item  Seguridad y Vigilancia: Identificar personas en tiempo real en el campo de la videovigilancia o detección de objetos raros o comportamientos extraños en espacios públicos.
+    \item  Tráfico y Transporte: Detectar vehículos para estudiar el flujo en carretera, análisis de la velocidad/comportamiento de vehículos en autopistas o identificar infracciones, como exceso de velocidad.
+    \item  Vehículos Autónomos: Detección de objetos y obtáculos o señales de tráfico.  Seguimiento de objetos para tareas.
+    \item  Agricultura: identificación de plagas o problemas en cultivos.
+    \item  Salud: detección de anomalías o lesiones en imágenes de pacientes médicos.
+\end{enumerate}
+
+
+\subsection{Desafíos y Limitaciones de YOLO}
+
+\begin{enumerate}
+    \item Compromiso entre Velocidad y Precisión: YOLO es rápido pero su precisión puede verse afectada al compararla con otros métodos con más detalle como Faster R-CNN, sobre todo en escenarios con objetos demasiado pequeños o complejos de analizar.
+    \item Escala: si los objetos son demasiado pequeños/grandes, esto se convierte en un desafío.
+    \item Datos de entrenamiento: la detección de objetos puede ser menos precisa si los datos tienen poca calidad y son demasiado diversos.
+\end{enumerate}
+
+\subsection{Por qué YOLO en este Proyecto}
+
+El empleo de YOLO se justifica por lo siguiente:
+\begin{enumerate}
+    \item Procesamiento Vídeo: el análisis de tráfico de coches necesita unos resultados rápidos y en tiempo real de vídeos a altas velocidades.
+    \item Precisión Alta: YOLO es un modelo ligero pero logra un gran acierto al reconocer objetos.
+    \item Implementación Sencilla: es un modelo de código abierto con mucha documentación.
+    \item Versátil: es un modelo flexible que puede ser adaptado a muchos contextos muy específicos.
+\end{enumerate}
+
