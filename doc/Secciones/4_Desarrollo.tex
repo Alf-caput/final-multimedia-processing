@@ -39,32 +39,33 @@ Una de las partes claves de la práctica fue calcular la velocidad de cada coche
 \end{enumerate}
 
 \subsection{Visualización de Resultados}
-Durante el procesamiento se muestra una ventana emergente que presenta los resultados en tiempo real: la detección de los vehículos, la ROI y las velocidades. Todos los frames procesados se guardan en un archivo de 
-salida con OpenCV.  Esto lo que permite es generar un vídeo final para ver en análisis 
+Durante el procesamiento se muestra una ventana emergente que presenta los resultados en tiempo real: la detección de los vehículos, la ROI y las velocidades. Todos los frames procesados se guardan en un archivo de salida con OpenCV.  Esto lo que permite es generar un vídeo final para ver en análisis 
 resultante de todos los cálculos realizados.
-A continuación se ven las distintas secuencias del vídeo:
-\begin{figure}[h!]
+A continuación se ven las distintas fases de procesamiento:
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width = 10cm]{ImagenesLatex/im1.png}{}
-    \caption{Imagen descriptiva del vídeo}
+    \includegraphics[width = 10cm]{ImagenesLatex/im1.jpg}{}
+    \caption{Frames en crudo}
     \label{fig:enter-label}
 \end{figure}
+
 Ahora se detecta cada coche con una cierta precisión.
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width = 10cm]{ImagenesLatex/im2.png}{}
-    \caption{Identificadores y Precisión de cada Vehículo}
+    \caption{Identificadores y Precisión de cada Vehículo utilizando YOLO}
     \label{fig:enter-label}
 \end{figure}
 En el siguiente frame se cuenta el número de vehículos en un ROI concreto.
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
-    \includegraphics[width = 10cm]{ImagenesLatex/im3.png}{}
+    \includegraphics[width = 10cm]{ImagenesLatex/im3.png}
     \caption{Contador vehículos en ROI}
     \label{fig:enter-label}
 \end{figure}
 En el próximo frame se calcula la velocidad en píxeles por segundo de cada vehículo que esté dentro de la ROI.
-\begin{figure}[h!]
+\begin{figure}[H]
     \centering
     \includegraphics[width = 10cm]{ImagenesLatex/im4.png}{}
     \caption{Velocidad vehículos}
