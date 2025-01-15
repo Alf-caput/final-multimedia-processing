@@ -42,7 +42,34 @@ Una de las partes claves de la práctica fue calcular la velocidad de cada coche
 Durante el procesamiento se muestra una ventana emergente que presenta los resultados en tiempo real: la detección de los vehículos, la ROI y las velocidades. Todos los frames procesados se guardan en un archivo de 
 salida con OpenCV.  Esto lo que permite es generar un vídeo final para ver en análisis 
 resultante de todos los cálculos realizados.
-
+A continuación se ven las distintas secuencias del vídeo:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width = 10cm]{ImagenesLatex/im1.png}{}
+    \caption{Imagen descriptiva del vídeo}
+    \label{fig:enter-label}
+\end{figure}
+Ahora se detecta cada coche con una cierta precisión.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width = 10cm]{ImagenesLatex/im2.png}{}
+    \caption{Identificadores y Precisión de cada Vehículo}
+    \label{fig:enter-label}
+\end{figure}
+En el siguiente frame se cuenta el número de vehículos en un ROI concreto.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width = 10cm]{ImagenesLatex/im3.png}{}
+    \caption{Contador vehículos en ROI}
+    \label{fig:enter-label}
+\end{figure}
+En el próximo frame se calcula la velocidad en píxeles por segundo de cada vehículo que esté dentro de la ROI.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width = 10cm]{ImagenesLatex/im4.png}{}
+    \caption{Velocidad vehículos}
+    \label{fig:enter-label}
+\end{figure}
 
 \subsection{Evaluación y Validación del Sistema}
 Para evaluar el modelo se han hecho dos pruebas: de precisión - se compararon las detecciones realizadas con YOLO con observaciones manuales para evaluar qué tan bien se identificaron los vehículos -, y validación de velocidades para ver si son coherentes y así ajustarlos.
